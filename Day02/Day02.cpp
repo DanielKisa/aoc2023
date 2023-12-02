@@ -9,6 +9,7 @@ struct Game {
 	int id;
 	vector<vector<int>> sets;
 	bool possible;
+	vector<int> maxCubes;
 };
 
 vector<string> split(const string& text, const string& separator) {
@@ -32,7 +33,8 @@ vector<string> split(const string& text, const string& separator) {
 
 Game parseLine(const string& line) {
 	vector<string> colors = { "red", "green", "blue" };
-	vector<int> maxCubes = { 12, 13, 14 };
+	vector<int> maxPossibleCubes = { 12, 13, 14 };
+	vector<int> maxCubes = { 0, 0, 0 };
 
 	vector<string> setStrings = split(line, ";");
 	string firstString = setStrings.at(0);
@@ -48,8 +50,11 @@ Game parseLine(const string& line) {
 			if (pos > 1) {
 				vector<string> spaceSplit = split(setString.substr(0, pos - 1), " ");
 				int nCubes = stoi(spaceSplit.back());
-				if (nCubes > maxCubes.at(i)) {
+				if (nCubes > maxPossibleCubes.at(i)) {
 					possible = false;
+				}
+				if (nCubes > maxCubes.at(i)) {
+					maxCubes.at(i) = nCubes;
 				}
 				set.push_back(nCubes);
 			}
@@ -60,7 +65,7 @@ Game parseLine(const string& line) {
 		sets.push_back(set);
 	}
 
-	return Game{ id, sets, possible };
+	return Game{ id, sets, possible, maxCubes };
 }
 
 int sumUpPossibleGames(vector<Game> games) {
@@ -73,6 +78,18 @@ int sumUpPossibleGames(vector<Game> games) {
 	return total;
 }
 
+int getPower(Game game) {
+	int power = game.maxCubes.at(0) * game.maxCubes.at(1) * game.maxCubes.at(2);
+	return power;
+}
+
+int sumUpPowers(vector<Game> games) {
+	int total = 0;
+	for (Game game : games) {
+		total += getPower(game);
+	}
+	return total;
+}
 
 int main()
 {
@@ -98,5 +115,9 @@ int main()
 
 	int totalPossible = sumUpPossibleGames(games);
 
-	cout << totalPossible;
+	cout << "Total Possible: " << totalPossible << "\n";
+
+	int totalPower = sumUpPowers(games);
+
+	cout << "Total Power: " << totalPower;
 }
