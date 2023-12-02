@@ -31,9 +31,7 @@ vector<string> split(const string& text, const string& separator) {
 	return splitText;
 }
 
-Game parseLine(const string& line) {
-	vector<string> colors = { "red", "green", "blue" };
-	vector<int> maxPossibleCubes = { 12, 13, 14 };
+Game parseLine(const string& line, const vector<string>& colors, const vector<int>& maxPossibleCubes) {
 	vector<int> maxCubes = { 0, 0, 0 };
 
 	vector<string> setStrings = split(line, ";");
@@ -68,7 +66,7 @@ Game parseLine(const string& line) {
 	return Game{ id, sets, possible, maxCubes };
 }
 
-int sumUpPossibleGames(vector<Game> games) {
+int sumUpPossibleGames(vector<Game>& games) {
 	int total = 0;
 	for (Game game : games) {
 		if (game.possible) {
@@ -83,7 +81,7 @@ int getPower(Game game) {
 	return power;
 }
 
-int sumUpPowers(vector<Game> games) {
+int sumUpPowers(vector<Game>& games) {
 	int total = 0;
 	for (Game game : games) {
 		total += getPower(game);
@@ -93,8 +91,8 @@ int sumUpPowers(vector<Game> games) {
 
 int main()
 {
-	// string testLine = "Game 1: 18 red, 8 green, 7 blue; 15 red, 4 blue, 1 green; 18 red, 1 green, 14 blue; 8 blue";
-
+	vector<string> colors = { "red", "green", "blue" };
+	vector<int> maxPossibleCubes = { 12, 13, 14 };
 	string inputPath = "input.txt";
 	fstream inputFile;
 	vector<string> inputData;
@@ -110,14 +108,12 @@ int main()
 
 	vector<Game> games;
 	for (string line : inputData) {
-		games.push_back(parseLine(line));
+		games.push_back(parseLine(line, colors, maxPossibleCubes));
 	}
 
 	int totalPossible = sumUpPossibleGames(games);
-
 	cout << "Total Possible: " << totalPossible << "\n";
 
 	int totalPower = sumUpPowers(games);
-
 	cout << "Total Power: " << totalPower;
 }
