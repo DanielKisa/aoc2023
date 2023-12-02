@@ -35,7 +35,7 @@ Game parseLine(const string& line, const vector<string>& colors, const vector<in
 	vector<int> maxCubes = { 0, 0, 0 };
 
 	vector<string> setStrings = split(line, ";");
-	string firstString = setStrings.at(0);
+	string firstString = setStrings[0];
 	int id = stoi(firstString.substr(5, firstString.find(':') - 5));
 
 	bool possible = true;
@@ -43,16 +43,16 @@ Game parseLine(const string& line, const vector<string>& colors, const vector<in
 	for (string setString : setStrings) {
 		vector<int> set;
 		for (int i = 0; i < colors.size(); i++) {
-			string color = colors.at(i);
+			string color = colors[i];
 			int pos = setString.find(color);
 			if (pos > 1) {
 				vector<string> spaceSplit = split(setString.substr(0, pos - 1), " ");
 				int nCubes = stoi(spaceSplit.back());
-				if (nCubes > maxPossibleCubes.at(i)) {
+				if (nCubes > maxPossibleCubes[i]) {
 					possible = false;
 				}
-				if (nCubes > maxCubes.at(i)) {
-					maxCubes.at(i) = nCubes;
+				if (nCubes > maxCubes[i]) {
+					maxCubes[i] = nCubes;
 				}
 				set.push_back(nCubes);
 			}
@@ -77,7 +77,7 @@ int sumUpPossibleGames(vector<Game>& games) {
 }
 
 int getPower(Game game) {
-	int power = game.maxCubes.at(0) * game.maxCubes.at(1) * game.maxCubes.at(2);
+	int power = game.maxCubes[0] * game.maxCubes[1] * game.maxCubes[2];
 	return power;
 }
 
